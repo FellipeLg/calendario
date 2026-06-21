@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: calendario
+    runtime: ruby
+    plan: free
+    buildCommand: "./bin/setup"
+    startCommand: "bin/rails server"
+    envVars:
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: RAILS_ENV
+        value: production
