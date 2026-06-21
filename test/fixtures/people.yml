@@ -1,0 +1,17 @@
+alice:
+  group: hexatombe
+  name: Alice
+  contact: alice@discord
+  color: "#a8323e"
+
+bob:
+  group: hexatombe
+  name: Bob
+  contact: bob@whatsapp
+  color: "#4b7aa0"
+
+carol:
+  group: outro_grupo
+  name: Carol
+  contact: ""
+  color: "#5f8f7a"

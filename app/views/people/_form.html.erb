@@ -1,0 +1,23 @@
+<%= render "shared/errors", record: person %>
+
+<%= form_with model: person,
+  url: person.persisted? ? group_person_path(@group.share_token, person) : group_people_path(@group.share_token),
+  method: person.persisted? ? :patch : :post,
+  class: "ritual-form" do |form| %>
+  <label>
+    <span>Nome</span>
+    <%= form.text_field :name, required: true, autofocus: true, placeholder: "Ex.: Alice" %>
+  </label>
+
+  <label>
+    <span>Contato</span>
+    <%= form.text_field :contact, placeholder: "Discord, WhatsApp ou observação" %>
+  </label>
+
+  <label>
+    <span>Cor no calendário</span>
+    <%= form.color_field :color, value: person.color.presence || Person::PALETTE.first %>
+  </label>
+
+  <%= form.submit person.persisted? ? "Salvar pessoa" : "Adicionar pessoa", class: "button primary full-width" %>
+<% end %>

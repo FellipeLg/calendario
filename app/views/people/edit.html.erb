@@ -1,0 +1,15 @@
+<% content_for :title, "Editar #{@person.name}" %>
+
+<div class="form-shell">
+  <%= link_to "← Voltar", group_calendar_path(@group.share_token), class: "back-link" %>
+  <div class="form-panel">
+    <p class="eyebrow">Pessoa</p>
+    <h1>Editar cadastro</h1>
+    <%= render "form", person: @person %>
+
+    <%= button_to "Excluir pessoa", group_person_path(@group.share_token, @person),
+      method: :delete,
+      class: "button danger full-width",
+      form: { onsubmit: "return confirm('Excluir esta pessoa e seus registros?')" } %>
+  </div>
+</div>

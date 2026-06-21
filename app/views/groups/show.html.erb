@@ -1,0 +1,179 @@
+<% content_for :title, "#{@group.name} - Agenda" %>
+
+<div class="app-shell">
+  <header class="hero-band">
+    <div>
+      <p class="eyebrow">Link privado do grupo</p>
+      <h1><%= @group.name %></h1>
+      <p class="hero-copy">Agenda compartilhada para disponibilidade, trabalho e compromissos.</p>
+    </div>
+
+    <div class="hero-actions">
+      <%= link_to "Nova pessoa", new_group_person_path(@group.share_token), class: "button secondary" %>
+      <%= link_to "Nova disponibilidade", new_group_availability_path(@group.share_token), class: "button secondary" %>
+      <%= link_to "Novo evento", new_group_event_path(@group.share_token), class: "button primary" %>
+    </div>
+  </header>
+
+  <section class="share-strip">
+    <span>URL do grupo</span>
+    <input type="text" value="<%= group_calendar_url(@group.share_token) %>" readonly>
+  </section>
+
+  <section class="legend-row" aria-label="Legenda">
+    <% Availability::STATUSES.each do |value, label| %>
+      <span class="legend-pill status-<%= value %>"><%= label %></span>
+    <% end %>
+  </section>
+
+  <div class="workspace-grid">
+    <section class="calendar-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Calendário</p>
+          <h2>Agenda do grupo</h2>
+        </div>
+      </div>
+
+      <div
+        id="calendar"
+        class="calendar-surface"
+        data-feed-url="<%= group_feed_path(@group.share_token, format: :json) %>"
+        data-new-availability-url="<%= new_group_availability_path(@group.share_token) %>"
+      ></div>
+    </section>
+
+    <aside class="side-panel">
+      <section class="side-section">
+        <div class="section-heading">
+          <h2>Pessoas</h2>
+          <%= link_to "+", new_group_person_path(@group.share_token), class: "icon-link", title: "Adicionar pessoa" %>
+        </div>
+
+        <% if @people.any? %>
+          <div class="people-list">
+            <% @people.each do |person| %>
+              <%= link_to edit_group_person_path(@group.share_token, person), class: "person-row" do %>
+                <span class="avatar" style="--person-color: <%= person.color %>"><%= person.initials %></span>
+                <span>
+                  <strong><%= person.name %></strong>
+                  <% if person.contact.present? %>
+                    <small><%= person.contact %></small>
+                  <% end %>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="empty-state">Nenhuma pessoa cadastrada.</p>
+        <% end %>
+      </section>
+
+      <section class="side-section">
+        <div class="section-heading">
+          <h2>Próximos eventos</h2>
+          <%= link_to "+", new_group_event_path(@group.share_token), class: "icon-link", title: "Adicionar evento" %>
+        </div>
+
+        <% if @events.any? %>
+          <div class="timeline-list">
+            <% @events.each do |event| %>
+              <%= link_to edit_group_event_path(@group.share_token, event), class: "timeline-row" do %>
+                <span class="date-block">
+                  <strong><%= l(event.starts_at, format: :short_day) %></strong>
+                  <small><%= l(event.starts_at, format: :time) %></small>
+                </span>
+                <span>
+                  <strong><%= event.title %></strong>
+                  <small><%= event.people.map(&:name).to_sentence %></small>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="empty-state">Nenhum evento futuro.</p>
+        <% end %>
+      </section>
+
+      <section class="side-section">
+        <div class="section-heading">
+          <h2>Disponibilidade</h2>
+          <%= link_to "+", new_group_availability_path(@group.share_token), class: "icon-link", title: "Adicionar disponibilidade" %>
+        </div>
+
+        <% if @availabilities.any? %>
+          <div class="timeline-list">
+            <% @availabilities.each do |availability| %>
+              <%= link_to edit_group_availability_path(@group.share_token, availability), class: "timeline-row" do %>
+                <span class="date-block status-<%= availability.status %>">
+                  <strong><%= l(availability.date, format: :short_day) %></strong>
+                  <small><%= availability.full_day? ? "Dia todo" : "#{time_field_value(availability.start_time)}-#{time_field_value(availability.end_time)}" %></small>
+                </span>
+                <span>
+                  <strong><%= availability.person.name %></strong>
+                  <small><%= availability.status_label %></small>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="empty-state">Nenhuma disponibilidade nos próximos dias.</p>
+        <% end %>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script>
+  (() => {
+    function startCalendar() {
+      const element = document.getElementById("calendar");
+      if (!element || element.dataset.ready === "true") return;
+      element.dataset.ready = "true";
+
+      if (!window.FullCalendar) {
+        element.innerHTML = "<p class='empty-state'>Calendário indisponível no momento.</p>";
+        return;
+      }
+
+      const calendar = new FullCalendar.Calendar(element, {
+        initialView: "dayGridMonth",
+        locale: "pt-br",
+        timeZone: "local",
+        height: "auto",
+        nowIndicator: true,
+        eventDisplay: "block",
+        headerToolbar: {
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,timeGridWeek,timeGridDay"
+        },
+        buttonText: {
+          today: "Hoje",
+          month: "Mês",
+          week: "Semana",
+          day: "Dia"
+        },
+        events: element.dataset.feedUrl,
+        dateClick: (info) => {
+          window.location = `${element.dataset.newAvailabilityUrl}?date=${info.dateStr}`;
+        },
+        eventClick: (info) => {
+          if (info.event.url) {
+            info.jsEvent.preventDefault();
+            window.location = info.event.url;
+          }
+        },
+        eventTimeFormat: {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }
+      });
+
+      calendar.render();
+    }
+
+    document.addEventListener("DOMContentLoaded", startCalendar);
+  })();
+</script>

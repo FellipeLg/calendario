@@ -1,0 +1,15 @@
+<% content_for :title, "Editar evento" %>
+
+<div class="form-shell wide">
+  <%= link_to "← Voltar", group_calendar_path(@group.share_token), class: "back-link" %>
+  <div class="form-panel">
+    <p class="eyebrow">Evento</p>
+    <h1>Editar evento</h1>
+    <%= render "form", event: @event, conflicts: @conflicts %>
+
+    <%= button_to "Excluir evento", group_event_path(@group.share_token, @event),
+      method: :delete,
+      class: "button danger full-width",
+      form: { onsubmit: "return confirm('Excluir este evento?')" } %>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<% content_for :title, "Novo evento - #{@group.name}" %>
+
+<div class="form-shell wide">
+  <%= link_to "← Voltar", group_calendar_path(@group.share_token), class: "back-link" %>
+  <div class="form-panel">
+    <p class="eyebrow">Evento</p>
+    <h1>Novo evento</h1>
+    <%= render "form", event: @event, conflicts: @conflicts %>
+  </div>
+</div>

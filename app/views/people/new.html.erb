@@ -1,0 +1,10 @@
+<% content_for :title, "Nova pessoa - #{@group.name}" %>
+
+<div class="form-shell">
+  <%= link_to "← Voltar", group_calendar_path(@group.share_token), class: "back-link" %>
+  <div class="form-panel">
+    <p class="eyebrow">Grupo</p>
+    <h1>Nova pessoa</h1>
+    <%= render "form", person: @person %>
+  </div>
+</div>

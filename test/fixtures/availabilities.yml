@@ -1,0 +1,15 @@
+alice_disponivel:
+  person: alice
+  date: <%= Date.current %>
+  start_time: ~
+  end_time: ~
+  status: disponivel
+  note: ""
+
+bob_trabalhando:
+  person: bob
+  date: <%= Date.current %>
+  start_time: <%= Time.zone.local(Date.current.year, Date.current.month, Date.current.day, 9, 0) %>
+  end_time: <%= Time.zone.local(Date.current.year, Date.current.month, Date.current.day, 17, 0) %>
+  status: trabalhando
+  note: "Expediente"

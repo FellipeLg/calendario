@@ -1,0 +1,10 @@
+<% content_for :title, "Nova disponibilidade - #{@group.name}" %>
+
+<div class="form-shell">
+  <%= link_to "← Voltar", group_calendar_path(@group.share_token), class: "back-link" %>
+  <div class="form-panel">
+    <p class="eyebrow">Agenda</p>
+    <h1>Nova disponibilidade</h1>
+    <%= render "form", availability: @availability %>
+  </div>
+</div>

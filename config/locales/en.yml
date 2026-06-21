@@ -1,0 +1,13 @@
+pt-BR:
+  hello: "Olá mundo"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m"
+      short_day: "%d/%m"
+  time:
+    formats:
+      short_day: "%d/%m"
+      time: "%H:%M"
+      short: "%d/%m %H:%M"
+      default: "%d/%m/%Y %H:%M"

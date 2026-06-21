@@ -1,0 +1,15 @@
+<% content_for :title, "Editar disponibilidade" %>
+
+<div class="form-shell">
+  <%= link_to "← Voltar", group_calendar_path(@group.share_token), class: "back-link" %>
+  <div class="form-panel">
+    <p class="eyebrow">Agenda</p>
+    <h1>Editar disponibilidade</h1>
+    <%= render "form", availability: @availability %>
+
+    <%= button_to "Excluir disponibilidade", group_availability_path(@group.share_token, @availability),
+      method: :delete,
+      class: "button danger full-width",
+      form: { onsubmit: "return confirm('Excluir esta disponibilidade?')" } %>
+  </div>
+</div>

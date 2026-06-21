@@ -1,0 +1,42 @@
+<%= render "shared/errors", record: availability %>
+
+<%= form_with model: availability,
+  url: availability.persisted? ? group_availability_path(@group.share_token, availability) : group_availabilities_path(@group.share_token),
+  method: availability.persisted? ? :patch : :post,
+  class: "ritual-form" do |form| %>
+  <label>
+    <span>Pessoa</span>
+    <%= select_tag "availability[person_id]",
+      options_from_collection_for_select(@group.people.order(:name), :id, :name, availability.person_id),
+      required: true %>
+  </label>
+
+  <label>
+    <span>Data</span>
+    <%= form.date_field :date, required: true %>
+  </label>
+
+  <div class="field-grid">
+    <label>
+      <span>Início</span>
+      <%= form.time_field :start_time, value: time_field_value(availability.start_time) %>
+    </label>
+
+    <label>
+      <span>Fim</span>
+      <%= form.time_field :end_time, value: time_field_value(availability.end_time) %>
+    </label>
+  </div>
+
+  <label>
+    <span>Status</span>
+    <%= form.select :status, status_options, {}, required: true %>
+  </label>
+
+  <label>
+    <span>Observação</span>
+    <%= form.text_area :note, rows: 4, placeholder: "Detalhes rápidos" %>
+  </label>
+
+  <%= form.submit availability.persisted? ? "Salvar disponibilidade" : "Registrar disponibilidade", class: "button primary full-width" %>
+<% end %>

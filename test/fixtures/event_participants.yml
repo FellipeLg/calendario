@@ -1,0 +1,7 @@
+alice_na_sessao:
+  event: sessao
+  person: alice
+
+bob_na_sessao:
+  event: sessao
+  person: bob

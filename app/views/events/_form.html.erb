@@ -1,0 +1,59 @@
+<%= render "shared/errors", record: event %>
+
+<% if conflicts.present? %>
+  <div class="conflict-box">
+    <strong>Conflito encontrado</strong>
+    <ul>
+      <% conflicts.each do |availability| %>
+        <li><%= availability.person.name %>: <%= availability.status_label %> em <%= l(availability.date) %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: event,
+  url: event.persisted? ? group_event_path(@group.share_token, event) : group_events_path(@group.share_token),
+  method: event.persisted? ? :patch : :post,
+  class: "ritual-form" do |form| %>
+  <label>
+    <span>Título</span>
+    <%= form.text_field :title, required: true, autofocus: true, placeholder: "Ex.: Sessão principal" %>
+  </label>
+
+  <div class="field-grid">
+    <label>
+      <span>Início</span>
+      <%= form.datetime_local_field :starts_at, value: datetime_field_value(event.starts_at), required: true %>
+    </label>
+
+    <label>
+      <span>Fim</span>
+      <%= form.datetime_local_field :ends_at, value: datetime_field_value(event.ends_at), required: true %>
+    </label>
+  </div>
+
+  <fieldset class="people-picker">
+    <legend>Pessoas</legend>
+    <%= hidden_field_tag "event[person_ids][]", "" %>
+    <% selected_ids = selected_person_ids(event) %>
+    <% @group.people.order(:name).each do |person| %>
+      <label class="check-row">
+        <%= check_box_tag "event[person_ids][]", person.id, selected_ids.include?(person.id.to_s) %>
+        <span class="avatar small" style="--person-color: <%= person.color %>"><%= person.initials %></span>
+        <span><%= person.name %></span>
+      </label>
+    <% end %>
+  </fieldset>
+
+  <label>
+    <span>Observação</span>
+    <%= form.text_area :note, rows: 4, placeholder: "Notas do evento" %>
+  </label>
+
+  <label class="check-row confirm-row">
+    <%= form.check_box :conflict_confirmed %>
+    <span>Salvar mesmo com conflito</span>
+  </label>
+
+  <%= form.submit event.persisted? ? "Salvar evento" : "Criar evento", class: "button primary full-width" %>
+<% end %>
