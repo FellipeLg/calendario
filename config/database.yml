@@ -19,15 +19,9 @@ production:
   cache:
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
-    migrations_paths: db/cache_migrate
-    database_tasks: false
   queue:
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
-    migrations_paths: db/queue_migrate
-    database_tasks: false
   cable:
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
-    migrations_paths: db/cable_migrate
-    database_tasks: false
