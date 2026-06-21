@@ -20,7 +20,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
           title: "Churrasco",
           starts_at: 3.days.from_now.change(hour: 18),
           ends_at: 3.days.from_now.change(hour: 22),
-          person_ids: [@alice.id, @bob.id]
+          person_ids: [ @alice.id, @bob.id ]
         }
       }
     end

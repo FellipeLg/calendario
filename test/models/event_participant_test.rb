@@ -7,7 +7,7 @@ class EventParticipantTest < ActiveSupport::TestCase
       title: "Novo Evento",
       starts_at: 3.days.from_now,
       ends_at: 3.days.from_now + 2.hours,
-      people: [people(:alice)]
+      people: [ people(:alice) ]
     )
     participant = EventParticipant.new(event: event, person: people(:bob))
     assert participant.valid?

@@ -66,7 +66,7 @@ class GroupFlowTest < ActionDispatch::IntegrationTest
         title: "Sessão de RPG",
         starts_at: 2.days.from_now.change(hour: 20),
         ends_at: 2.days.from_now.change(hour: 23),
-        person_ids: [alice.id, bob.id]
+        person_ids: [ alice.id, bob.id ]
       }
     }
     assert_redirected_to group_calendar_path(token)

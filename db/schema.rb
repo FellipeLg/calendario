@@ -67,9 +67,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_19_001819) do
     t.index ["group_id"], name: "index_people_on_group_id"
   end
 
-  add_foreign_key "availabilities", "people"
-  add_foreign_key "event_participants", "events"
-  add_foreign_key "event_participants", "people"
-  add_foreign_key "events", "groups"
   add_foreign_key "people", "groups"
 end
