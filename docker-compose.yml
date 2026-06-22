@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: calendario
+      POSTGRES_USER: calendario
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - RAILS_ENV=production
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - DATABASE_URL=postgresql://calendario:${DB_PASSWORD}@db:5432/calendario
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+    volumes:
+      - storage_data:/rails/storage
+
+volumes:
+  postgres_data:
+  storage_data:

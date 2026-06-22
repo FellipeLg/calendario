@@ -13,15 +13,38 @@ test:
 
 production:
   primary:
+    <% if ENV["DATABASE_URL"] %>
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    <% else %>
+    <<: *default
+    database: storage/production.sqlite3
+    <% end %>
   cache:
+    <% if ENV["DATABASE_URL"] %>
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
+    <% else %>
+    <<: *default
+    database: storage/production_cache.sqlite3
+    migrations_paths: db/cache_migrate
+    <% end %>
   queue:
+    <% if ENV["DATABASE_URL"] %>
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
+    <% else %>
+    <<: *default
+    database: storage/production_queue.sqlite3
+    migrations_paths: db/queue_migrate
+    <% end %>
   cable:
+    <% if ENV["DATABASE_URL"] %>
     adapter: postgresql
     url: <%= ENV["DATABASE_URL"] %>
+    <% else %>
+    <<: *default
+    database: storage/production_cable.sqlite3
+    migrations_paths: db/cable_migrate
+    <% end %>
